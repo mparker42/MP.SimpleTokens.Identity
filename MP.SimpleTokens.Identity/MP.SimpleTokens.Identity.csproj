@@ -11,7 +11,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
     <PackageReference Include="MP.DocumentDB" Version="1.0.5" />
-    <PackageReference Include="MP.SimpleTokens.Common.Ethereum" Version="1.0.3" />
+    <PackageReference Include="MP.SimpleTokens.Common.Ethereum" Version="1.0.4" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 

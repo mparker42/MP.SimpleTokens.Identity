@@ -8,6 +8,7 @@ using MP.SimpleTokens.Identity.Models;
 using Nethereum.ABI.FunctionEncoding.Attributes;
 using Nethereum.Contracts;
 using Nethereum.StandardNonFungibleTokenERC721;
+using Nethereum.StandardNonFungibleTokenERC721.ContractDefinition;
 using Nethereum.Web3;
 using System;
 using System.Collections.Generic;
@@ -53,7 +54,9 @@ namespace MP.SimpleTokens.Identity.Controllers
                         break;
                 }
 
-                return Ok(new { owner, tokenURI, storedOwner });
+                var transfers = await _ethereumService.GetTokenTransactionHistory(token.BlockchainInfo);
+
+                return Ok(new { owner, tokenURI, storedOwner, transfers });
             }
 
 
