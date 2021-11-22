@@ -1,10 +1,10 @@
-﻿namespace MP.SimpleTokens.Identity.Models
+﻿using MP.SimpleTokens.Identity.Contracts;
+
+namespace MP.SimpleTokens.Identity.Models
 {
-    public class IdentityInfo
+    public class IdentityInfo : PublicIdentity
     {
-        public string? Id { get; set; }
         public SocialIdentity? SocialIdentity { get; set; }
         public string? BlockchainAddress { get; set; }
-        public string? Name { get; set; }
     }
 }

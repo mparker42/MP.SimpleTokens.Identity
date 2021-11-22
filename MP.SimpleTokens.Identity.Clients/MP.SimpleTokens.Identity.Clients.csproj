@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Authors>mparker42</Authors>
+    <Description>Refit client for the MP.SimpleTokens.Identity API.</Description>
+    <PackageProjectUrl>https://github.com/mparker42/MP.SimpleTokens.Identity.Clients</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/mparker42/MP.SimpleTokens.Identity.Clients</RepositoryUrl>
+    <PackageLicenseExpression>MIT-0</PackageLicenseExpression>
+    <Copyright>Martin Parker</Copyright>
+    <Version>1.0.1</Version>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Refit" Version="6.1.15" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MP.SimpleTokens.Identity.Contracts\MP.SimpleTokens.Identity.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Authors>mparker42</Authors>
+    <Description>Public model classes for the MP.SimpleTokens.Identity API.</Description>
+    <PackageProjectUrl>https://github.com/mparker42/MP.SimpleTokens.Identity.Contracts</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/mparker42/MP.SimpleTokens.Identity.Contracts</RepositoryUrl>
+    <PackageLicenseExpression>MIT-0</PackageLicenseExpression>
+    <Copyright>Martin Parker</Copyright>
+    <Version>1.0.1</Version>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+</Project>

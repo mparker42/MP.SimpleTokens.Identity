@@ -1,25 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.Extensions.Logging;
 using MP.DocumentDB.Interfaces;
 using MP.SimpleTokens.Common.Ethereum.Interfaces;
-using MP.SimpleTokens.Common.Models.Tokens;
+using MP.SimpleTokens.Identity.Contracts;
 using MP.SimpleTokens.Identity.Models;
-using Nethereum.ABI.FunctionEncoding.Attributes;
-using Nethereum.Contracts;
-using Nethereum.StandardNonFungibleTokenERC721;
-using Nethereum.StandardNonFungibleTokenERC721.ContractDefinition;
-using Nethereum.Web3;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Threading.Tasks;
 
 namespace MP.SimpleTokens.Identity.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("token")]
     public class TokenController : ControllerBase
     {
         private readonly ILogger<TokenController> _logger;
@@ -31,40 +19,50 @@ namespace MP.SimpleTokens.Identity.Controllers
             _ethereumService = ethereumService;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> GetUsersForToken([FromServices] IDocumentCollection<IdentityInfo> collection, TokenInfo token)
+        [HttpPost("public/blockchain/transactions/get")]
+        [ProducesResponseType(typeof(IDictionary<string, PublicIdentity>), 200)]
+        public async Task<IActionResult> GetPublicUsersForBlockchainTokenTransactions(
+            [FromServices] IDocumentCollection<IdentityInfo> collection,
+            IEnumerable<TokenTransaction> tokenTransactions
+        )
         {
-            if (token.Type == TokenType.Ethereum)
+            var owners = new Dictionary<string, PublicIdentity>();
+
+            async Task AddPublicIdentity(string blockChainAddress)
             {
-                if (token.BlockchainInfo == null)
-                    return BadRequest();
+                _logger.LogInformation($"Checking the mongo db for identity with blockchain address {blockChainAddress}");
 
-                var owner = await _ethereumService.GetTokenOwnerAddress(token.BlockchainInfo);
+                PublicIdentity storedOwner = await collection.GetFirstOrDefault(c => c.BlockchainAddress == blockChainAddress);
 
-                var storedOwner = await collection.GetFirstOrDefault(c => c.BlockchainAddress == owner);
-
-                var tokenURI = await _ethereumService.GetTokenURI(token.BlockchainInfo);
-
-                switch (token.BlockchainInfo.TokenVendor)
+                if (storedOwner == null)
                 {
-                    case TokenVendor.Mintable:
-
-                        break;
-                    default:
-                        break;
+                    _logger.LogInformation($"Identity not found with blockchain address {blockChainAddress}, returning an anonymous armadillo");
+                    storedOwner = new PublicIdentity { Name = "Anonymous Armadillo" };
                 }
 
-                var transfers = await _ethereumService.GetTokenTransactionHistory(token.BlockchainInfo);
-
-                return Ok(new { owner, tokenURI, storedOwner, transfers });
+                owners.Add(blockChainAddress, storedOwner);
             }
 
+            foreach (var transfer in tokenTransactions)
+            {
+                if (
+                    !string.IsNullOrWhiteSpace(transfer.To) &&
+                    !owners.ContainsKey(transfer.To)
+                )
+                {
+                    await AddPublicIdentity(transfer.To);
+                }
 
-            return Ok();
+                if (
+                    !string.IsNullOrWhiteSpace(transfer.From) &&
+                    !owners.ContainsKey(transfer.From)
+                )
+                {
+                    await AddPublicIdentity(transfer.From);
+                }
+            }
+
+            return Ok(owners);
         }
     }
-
-
-
-
 }
