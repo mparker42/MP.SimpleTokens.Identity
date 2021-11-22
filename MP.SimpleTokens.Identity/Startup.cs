@@ -2,6 +2,7 @@ using Microsoft.OpenApi.Models;
 using MP.DocumentDB;
 using MP.SimpleTokens.Common.Ethereum;
 using MP.SimpleTokens.Identity.Models;
+using Microsoft.Extensions.Configuration;
 
 namespace MP.SimpleTokens.Identity
 {
@@ -25,6 +26,7 @@ namespace MP.SimpleTokens.Identity
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MP.SimpleTokens.Identity", Version = "v1" });
             });
+            services.AddApplicationInsightsTelemetry(Configuration["APPINSIGHTS_CONNECTIONSTRING"]);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
